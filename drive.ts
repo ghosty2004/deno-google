@@ -132,8 +132,10 @@ export class GoogleDrive {
 
           name = decodeURIComponent(name).replace(/\'/g, "\\'");
 
-          const fileAttrs =
-            FILE_ATTRS + (this.options.extraFileAttrs || []).join(",");
+          const fileAttrs = [
+            ...FILE_ATTRS.split(", "),
+            ...(this.options.extraFileAttrs || []),
+          ].join(", ");
 
           const result: any = await this.request({
             q: `'${metadata.id}' in parents and name = '${name}' and trashed = false`,
