@@ -13,6 +13,7 @@ export type DriveOptions = {
   access_token?: string;
   expires_on?: number;
   logger?: boolean;
+  extraFileAttrs?: string[];
 };
 
 /**
@@ -130,9 +131,13 @@ export class GoogleDrive {
           const time = Date.now();
 
           name = decodeURIComponent(name).replace(/\'/g, "\\'");
+
+          const fileAttrs =
+            FILE_ATTRS + (this.options.extraFileAttrs || []).join(",");
+
           const result: any = await this.request({
             q: `'${metadata.id}' in parents and name = '${name}' and trashed = false`,
-            fields: `files(${FILE_ATTRS})`,
+            fields: `files(${fileAttrs})`,
           });
 
           this.pathCache[fullPath] = result.files[0];
